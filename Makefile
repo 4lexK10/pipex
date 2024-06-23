@@ -6,14 +6,14 @@
 #    By: akloster <akloster@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/12 15:25:10 by akloster          #+#    #+#              #
-#    Updated: 2024/06/19 18:28:02 by akloster         ###   ########.fr        #
+#    Updated: 2024/06/21 15:16:25 by akloster         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 RM				= rm -rf
 
 SRC				=	pipex.c free_functions.c error_handling.c file_handling.c \
-					execs.c
+					execs.c parser.c utils.c
 
 LIBFT			=	libft/libft.a
 

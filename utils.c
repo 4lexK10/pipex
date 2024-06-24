@@ -3,12 +3,9 @@
 
 char	*complete_path(char *path)
 {
-	char	*temp;
 	char	*new_path;
 
-	temp = ft_strdup(path);
-	new_path = ft_strjoin(temp, "/");	
-	my_free(&temp, 0);
+	new_path = ft_strjoin(path, "/");	
 	if (!new_path)
 		return (NULL);
 	return (new_path);
@@ -73,19 +70,14 @@ char **find_path(char **bin, char **envp)
 	{
 		temp = complete_path(envp[++i]);
 		test = ft_strjoin(temp, bin[0]);
+		my_free(&temp, 0);
 		if (!test)
 		{
 			ft_error("malloc", HAS_ERRNO);
 			return (NULL);
 		}
-		if (access(test, F_OK | X_OK) != -1)
+		if (access(test, F_OK | X_OK) != -1 && my_free(&test, 1))
 			return (give_path(envp,	i));
-/* 		while (*test != '\0')
-		{
-			write(2, &(*test), 1);
-			++test;
-		}
-		write(2, "\n", 1); */
 	}
 	ft_error("binary not found", NO_ERRNO);
 	return (NULL);

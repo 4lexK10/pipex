@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 18:26:42 by akloster          #+#    #+#             */
-/*   Updated: 2024/06/21 18:39:00 by akloster         ###   ########.fr       */
+/*   Updated: 2024/06/24 21:53:21 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	exec_cmd_parent(char **argv, int *fds, char *path, char **envp)
 	bin_with_path = ft_strjoin(complete_path(check[0]), arg[0]);
 	if (execve(bin_with_path, arg, envp) == -1)
 		return (ft_error("execve", HAS_ERRNO));
-	
 	return (ft_error("execution error", NO_ERRNO));
 }
 

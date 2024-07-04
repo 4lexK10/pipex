@@ -6,11 +6,11 @@
 #    By: akloster <akloster@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/12 15:25:10 by akloster          #+#    #+#              #
-#    Updated: 2024/06/21 15:16:25 by akloster         ###   ########.fr        #
+#    Updated: 2024/07/03 18:26:35 by akloster         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-RM				= rm -rf
+RM				=	rm -rf
 
 SRC				=	pipex.c free_functions.c error_handling.c file_handling.c \
 					execs.c parser.c utils.c

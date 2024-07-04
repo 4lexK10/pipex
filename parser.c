@@ -6,15 +6,13 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 17:21:26 by akloster          #+#    #+#             */
-/*   Updated: 2024/06/24 19:07:22 by akloster         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:28:18 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-/* HAVE TO PARSE ENVP with access*/
-
-static int	check_arg(char *str)
+/* static int	check_arg(char *str)
 {
 	int	i;
 
@@ -25,32 +23,96 @@ static int	check_arg(char *str)
 			return (0);
 	}
 	return (ft_error("error: incorrect argument", NO_ERRNO));
+} */
+
+char	**special_case(char **arg)
+{
+	char	**res;
+	int		i;
+
+	i = 0;
+	if (!arg)
+		return (NULL);
+	while (arg[i])
+		++i;
+	res = (char **)malloc((i + 1) * sizeof(char *));
+	if (!res && free_all(&arg, &res))
+		return (NULL);
+	res[0] = ft_strtrim(arg[0], " ");
+	if (!res[0] && free_all(&arg, &res))
+		return (NULL);
+	i = 0;
+	while (arg[++i])
+	{
+		res[i] = ft_strdup(arg[i]);
+		if (!res[i] && free_all(&arg, &res))
+			return (NULL);
+	}
+	res[i] = NULL;
+	free_ptr_array(&arg);
+	return (res);
 }
 
-int	parse_args(int argc, char **argv, char **envp)
+static int	check_second_arg(char **argv, char **all_path)
 {
-	char	**all_path;
 	char	**arg;
+	char	**temp;
 
-	if (argc != 5)
-		return (ft_error("error: incorrect number of arguments",
-			NO_ERRNO));
-	if (!envp)
-		return (ft_error("error: missing environment variables",
-			NO_ERRNO));
-	if (check_arg(argv[2]) == -1 || check_arg(argv[3]) == -1)
-		return (-1);
-	arg = ft_split(argv[3], ' ');
+	if (ft_strrchr(argv[3], 39))
+		arg = special_case(ft_split(argv[3], 39));
+	else
+		arg = ft_split(argv[3], ' ');
 	if (!arg)
 		return (ft_error("malloc", HAS_ERRNO));
-	all_path = get_all_path(envp);
-	if (!all_path)
-	{
-		free_ptr_array(&arg);
+	if (!all_path && free_all(&arg, NULL))
 		return (-1);
-	}
-	if (!find_path(arg, all_path))
+	temp = find_path(arg, all_path);
+	if (!temp && free_all(&arg, &temp))
 		return (-1);
+	free_all(&arg, &temp);
 	return (0);
 }
 
+static int	absolute_check(char *argv)
+{
+	char	**abs_bin;
+
+	abs_bin = ft_split(argv, ' ');
+	if (!abs_bin)
+		return (ft_error("malloc", HAS_ERRNO));
+	if (access(abs_bin[0], F_OK | X_OK) != -1)
+	{
+		free_ptr_array(&abs_bin);
+		return (1);
+	}
+	free_ptr_array(&abs_bin);
+	return (0);
+}
+
+int	parse_args(char **argv)
+{
+	char	**all_path;
+	char	**arg;
+	char	**temp;
+
+	if (absolute_check(argv[3]) == -1)
+		return (-1);
+	if (absolute_check(argv[3]))
+		return (0);
+	if (ft_strrchr(argv[3], 39))
+		arg = special_case(ft_split(argv[3], 39));
+	else
+		arg = ft_split(argv[3], ' ');
+	if (!arg)
+		return (ft_error("malloc", HAS_ERRNO));
+	all_path = get_all_path(NULL);
+	if (!all_path && free_all(&arg, NULL))
+		return (-1);
+	temp = find_path(arg, all_path);
+	if (!temp && free_all(&arg, &all_path) && free_return(&temp, 1))
+		return (-1);
+	free_all(&temp, &arg);
+	if (check_second_arg(argv, all_path) == -1 && free_return(&all_path, 1))
+		return (-1);
+	return (free_return(&all_path, 0));
+}

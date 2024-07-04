@@ -6,33 +6,33 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:12:42 by akloster          #+#    #+#             */
-/*   Updated: 2024/06/21 18:32:29 by akloster         ###   ########.fr       */
+/*   Updated: 2024/07/03 18:48:07 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	child_files(int *fds, char *path)
+int	second_files(int *fds, char *path)
 {
 	int	output_fd;
 
 	if (access(path, F_OK) == -1)
-		output_fd = open(path, O_CREAT | O_WRONLY | 00700);
+		output_fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	else if (access(path, W_OK) == -1)
 		return (ft_error("access", HAS_ERRNO));
 	else
 		output_fd = open(path, O_TRUNC | O_WRONLY);
 	if (output_fd == -1)
 		return (ft_error("open", HAS_ERRNO));
-	if (dup2(fds[0], STDIN_FILENO) == -1 ||
-			dup2(output_fd, STDOUT_FILENO) == -1)
+	if (dup2(fds[0], STDIN_FILENO) == -1
+		|| dup2(output_fd, STDOUT_FILENO) == -1)
 		return (ft_error("dup2", HAS_ERRNO));
 	if (close(fds[1]) == -1 || close(fds[0]) == -1)
 		return (ft_error("close", HAS_ERRNO));
 	return (0);
 }
 
-int parent_files(int *fds, char *path)
+int	first_files(int *fds, char *path)
 {
 	int	input_fd;
 

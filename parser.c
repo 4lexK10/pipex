@@ -6,24 +6,11 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 17:21:26 by akloster          #+#    #+#             */
-/*   Updated: 2024/07/04 13:28:18 by akloster         ###   ########.fr       */
+/*   Updated: 2024/07/04 17:16:58 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-/* static int	check_arg(char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i] != '\0')
-	{
-		if (ft_isalnum(str[i]))
-			return (0);
-	}
-	return (ft_error("error: incorrect argument", NO_ERRNO));
-} */
 
 char	**special_case(char **arg)
 {
